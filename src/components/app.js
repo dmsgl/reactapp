@@ -49,13 +49,11 @@ export default class App extends React.Component {
     }
     //test if this works
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.props !== nextProps.props) {
-            console.log('>>>>>>>>>>>>>>>>>>>>RERENDER<<<<<<<<<<<<<<<<<<<<');
-            return true;
-        } else {
-            console.log('>>>>>>>>>>>>>>>>>>>>NO RERENDER<<<<<<<<<<<<<<<<<<<<');
-            return false;
-        }
+        console.log('applevel');
+        console.log(this.props !== nextProps);
+        console.log(this.state !== nextState );
+        console.log(this.state !== nextState || this.props !== nextProps);
+        return (this.state !== nextState || this.props !== nextProps);
     }
 
     //fix this for immutable

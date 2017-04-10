@@ -16,6 +16,7 @@ export default class TodosList extends React.Component {
     }
 
     render() {
+        console.log('ONLY RENDER AFTER A CREATE ACTION');
         return (
             <form onSubmit={this.handleCreate.bind(this)}>
                 <input type="text" placeholder="What do I need to do?" ref="createInput" />
@@ -39,8 +40,9 @@ export default class TodosList extends React.Component {
             this.setState({ error: validateInput });
             return;
         }
-
-        this.setState({ error: null });
+        if(this.state.error !== null) {
+            this.setState({ error: null });
+        }
         this.props.createTask(task, priority);
         this.refs.createInput.value = '';
         this.refs.createInput2.value = '';

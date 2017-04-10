@@ -9,16 +9,6 @@ export default class TodosListItem extends React.Component {
         };
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.props !== nextProps.props) {
-            console.log('>>>>>>>>>>>>>>>>>>>> RERENDER <<<<<<<<<<<<<<<<<<<<');
-            return true;
-        } else {
-            console.log('>>>>>>>>>>>>>>>>>>>> NO RERENDER <<<<<<<<<<<<<<<<<<<<');
-            return false;
-        }
-    }
-
     render() {
         const { task, priority, isCompleted } = this.props;
 

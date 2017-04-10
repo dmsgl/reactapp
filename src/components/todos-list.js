@@ -4,6 +4,7 @@ import TodosListHeader from './todos-list-header';
 import TodosListItem from './todos-list-item';
 
 export default class TodosList extends React.Component {
+
     renderItems() {
         const props = _.omit(this.props, 'todos');
 
