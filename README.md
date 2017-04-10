@@ -1,4 +1,4 @@
-modified version of michaelcheng429's to do app
+modified version of michaelcheng429's todo app
 
 ## Usage
 1. 'npm install'
