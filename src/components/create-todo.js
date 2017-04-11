@@ -16,7 +16,6 @@ export default class TodosList extends React.Component {
     }
 
     render() {
-        console.log('ONLY RENDER AFTER A CREATE ACTION');
         return (
             <form onSubmit={this.handleCreate.bind(this)}>
                 <input type="text" placeholder="What do I need to do?" ref="createInput" />

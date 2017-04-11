@@ -9,6 +9,12 @@ export default class TodosListItem extends React.Component {
         };
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log('complevel');
+        console.log(this.state !== nextState || this.props.task !== nextProps.task || this.props.priority !== nextProps.priority || this.props.isCompleted !== nextProps.isCompleted);
+        return (this.state !== nextState || this.props.task !== nextProps.task || this.props.priority !== nextProps.priority || this.props.isCompleted !== nextProps.isCompleted  );
+    }
+
     render() {
         const { task, priority, isCompleted } = this.props;
 
