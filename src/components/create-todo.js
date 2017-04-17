@@ -15,7 +15,15 @@ export default class TodosList extends React.Component {
         return <div style={{ color: 'red' }}>{this.state.error}</div>;
     }
 
+    //test if this works
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log('shouldComponentUpdate? create-todo.js');
+        console.log(this.state !== nextState);
+        return (this.state !== nextState);
+    }
+
     render() {
+        console.log('create render');
         return (
             <form onSubmit={this.handleCreate.bind(this)}>
                 <input type="text" placeholder="What do I need to do?" ref="createInput" />

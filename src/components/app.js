@@ -34,6 +34,7 @@ export default class App extends React.Component {
     }
 
     render() {
+        console.log('app render');
         return (
             <div>
                 <h1>ToDo App</h1>
@@ -49,9 +50,7 @@ export default class App extends React.Component {
     }
     //test if this works
     shouldComponentUpdate(nextProps, nextState) {
-        console.log('applevel');
-        console.log(this.props !== nextProps);
-        console.log(this.state !== nextState );
+        console.log('shouldComponentUpdate? app.js');
         console.log(this.state !== nextState || this.props !== nextProps);
         return (this.state !== nextState || this.props !== nextProps);
     }

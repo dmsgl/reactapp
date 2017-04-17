@@ -5,7 +5,7 @@ export default class TodosListHeader extends React.Component {
         return false;
     }
     render() {
-        console.log('NEVER RENDER THIS TWICE');
+        console.log('header render');
         return (
             <thead>
                 <tr>

@@ -12,6 +12,7 @@ export default class TodosList extends React.Component {
     }
 
     render() {
+        console.log('list container render');
         return (
             <table>
                 <TodosListHeader />
