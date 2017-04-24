@@ -1,4 +1,6 @@
 import React from 'react';
+import shallowCompare from 'react-addons-shallow-compare';
+import shallowequal  from 'shallowequal';
 
 export default class TodosListItem extends React.Component {
     constructor(props) {
@@ -9,10 +11,13 @@ export default class TodosListItem extends React.Component {
         };
     }
 
+    // The main advantage of using Immutable objects come from the ability to use shallow compare, 
+    // which makes comparison involving deeply nested structures inexpensive. Another advantage is
+    // more maintainable code as you don't have to compare primitive values directly and can use
+    // a generic function that works for any component
+
     shouldComponentUpdate(nextProps, nextState) {
-        console.log('shouldComponentUpdate? todos-list-item.js');
-        console.log(this.state !== nextState || this.props.task !== nextProps.task || this.props.priority !== nextProps.priority || this.props.isCompleted !== nextProps.isCompleted);
-        return (this.state !== nextState || this.props.task !== nextProps.task || this.props.priority !== nextProps.priority || this.props.isCompleted !== nextProps.isCompleted  );
+        return !shallowequal(this.props, nextProps) || !shallowequal(this.state, nextState);
     }
 
     render() {

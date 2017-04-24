@@ -1,4 +1,6 @@
 import React from 'react';
+import shallowCompare from 'react-addons-shallow-compare';
+import shallowequal  from 'shallowequal';
 
 export default class TodosList extends React.Component {
     constructor(props) {
@@ -9,17 +11,14 @@ export default class TodosList extends React.Component {
         };
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !shallowequal(this.props, nextProps) || !shallowequal(this.state, nextState);
+    }
+
     renderError() {
         if (!this.state.error) { return null; }
 
         return <div style={{ color: 'red' }}>{this.state.error}</div>;
-    }
-
-    //test if this works
-    shouldComponentUpdate(nextProps, nextState) {
-        console.log('shouldComponentUpdate? create-todo.js');
-        console.log(this.state !== nextState);
-        return (this.state !== nextState);
     }
 
     render() {
@@ -47,9 +46,8 @@ export default class TodosList extends React.Component {
             this.setState({ error: validateInput });
             return;
         }
-        if(this.state.error !== null) {
-            this.setState({ error: null });
-        }
+
+        this.setState({ error: null });
         this.props.createTask(task, priority);
         this.refs.createInput.value = '';
         this.refs.createInput2.value = '';
@@ -58,7 +56,7 @@ export default class TodosList extends React.Component {
     validateInput(task) {
         if (!task) {
             return 'Please enter a task.';
-        } else if (_.find(this.props.todos, todo => todo.task === task)) {
+        } else if (_.find(this.props.todos.toJS(), todo => todo.task === task)) {
             return 'Task already exists.';
         } else {
             return null;

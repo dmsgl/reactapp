@@ -2,16 +2,18 @@ import React from 'react';
 import CreateTodo from './create-todo';
 import TodosList from './todos-list';
 import Immutable from 'immutable';
+import shallowCompare from 'react-addons-shallow-compare';
+import shallowequal  from 'shallowequal';
 
 const todosVanilla = [
 {
-    task: 'make React tutorial',
+    task: 'play Overwatch',
     priority: 'Urgent',
     isCompleted: false
 
 },
 {
-    task: 'eat dinner',
+    task: 'watch anime',
     priority: 'Urgent',
     isCompleted: true
 },
@@ -27,9 +29,13 @@ var todos = Immutable.fromJS(todosVanilla);
 export default class App extends React.Component {
     constructor(props) {
         super(props);
+        this.toggleTask = this.toggleTask.bind(this);
+        this.saveTask = this.saveTask.bind(this);
+        this.deleteTask = this.deleteTask.bind(this);
+        this.createTask = this.createTask.bind(this)
 
         this.state = {
-            todos: todos.toJS()
+            todos: todos
         };
     }
 
@@ -38,81 +44,85 @@ export default class App extends React.Component {
         return (
             <div>
                 <h1>ToDo App</h1>
-                <CreateTodo todos={this.state.todos} createTask={this.createTask.bind(this)} />
+                <CreateTodo todos={this.state.todos} createTask={this.createTask} />
                 <TodosList
                     todos={this.state.todos}
-                    toggleTask={this.toggleTask.bind(this)}
-                    saveTask={this.saveTask.bind(this)}
-                    deleteTask={this.deleteTask.bind(this)}
+                    toggleTask={this.toggleTask}
+                    saveTask={this.saveTask}
+                    deleteTask={this.deleteTask}
                 />
             </div>
         );
     }
-    //test if this works
+
     shouldComponentUpdate(nextProps, nextState) {
-        console.log('shouldComponentUpdate? app.js');
-        console.log(this.state !== nextState || this.props !== nextProps);
-        return (this.state !== nextState || this.props !== nextProps);
+        return !shallowequal(this.props, nextProps) || !shallowequal(this.state, nextState);
     }
 
-    //fix this for immutable
     toggleTask(task) {
         console.log('toggleTask');
-        const foundTodo = _.find(this.state.todos, todo => todo.task === task);
-        foundTodo.isCompleted = !foundTodo.isCompleted;
-        const index = _.findIndex(this.state.todos, todo => todo.task === task);
-        
-        const tempList = Immutable.fromJS(this.state.todos);
-        tempList.setIn([index, 'isCompleted'], foundTodo.isCompleted).toJS();
 
-        this.setState({ todos: tempList.toJS() });
+        const myList = this.state.todos;
+        const searchList = this.state.todos.toJS();
+        // converting an Immutable to a plain JS object is expensive
+        const foundTodo = _.find(searchList, todo => todo.task === task);    
+        foundTodo.isCompleted = !foundTodo.isCompleted;
+        const mapUpdateFunc = () => foundTodo.isCompleted;
+        const index = _.findIndex(searchList, todo => todo.task === task);
+        const listUpdateFunc = m => m.update("isCompleted", mapUpdateFunc);
+        this.setState(({todos}) => ({
+          todos: myList.update(index, listUpdateFunc)
+        }));
+
 
     }
 
     createTask(task, priority) {
         console.log('createTask');
-        //this.state.todos.push({
-            //task,
-            //isCompleted: false
-        //});
-        //this.setState({ todos: this.state.todos });
-        const tempList = Immutable.fromJS(this.state.todos);
-        var tempList2 = tempList.concat({
+
+        const myList = this.state.todos;  
+        const tempArray = {
             task: task,
             priority: priority,
             isCompleted: false
-        });
-        this.setState({ todos: tempList2.toJS() });
+        };
+        const tempMap = Immutable.Map(tempArray);
+
+        this.setState(({todos}) => ({
+          todos: myList.push(tempMap)
+        }));
+
+
 
     }
-    //fix this for immutable
+
     saveTask(oldTask, newTask) {
         console.log('saveTask');
-        //const foundTodo = _.find(this.state.todos, todo => todo.task === oldTask);
-        //foundTodo.task = newTask.task;
-        //foundTodo.priority = newTask.priority;
-        //this.setState({ todos: this.state.todos });
-        const foundTodo = _.find(this.state.todos, todo => todo.task === oldTask.task);
-        foundTodo.task = newTask.task;
-        foundTodo.priority = newTask.priority;
-        const index = _.findIndex(this.state.todos, todo => todo.task === oldTask.task);
-        const tempList = Immutable.fromJS(this.state.todos);
-        tempList.setIn([index, 'task'], foundTodo.task).toJS();
-        tempList.setIn([index, 'priority'], foundTodo.priority).toJS();
 
-        this.setState({ todos: tempList.toJS() });
+        const myList = this.state.todos;
+        const searchList = this.state.todos.toJS();
+        // converting an Immutable to a plain JS object is expensive
+        const foundTodo = _.find(searchList, todo => todo.task === oldTask.task);    
+        const mapUpdateFunc = () => newTask.task;
+        const mapUpdateFunc2 = () => newTask.priority;
+        const index = _.findIndex(searchList, todo => todo.task === oldTask.task);  
+        const listUpdateFunc = m => m.update("task", mapUpdateFunc).update("priority", mapUpdateFunc2);
+        this.setState(({todos}) => ({
+          todos: myList.update(index, listUpdateFunc)
+        }));
 
     }
-    //fix this for immutable
+
     deleteTask(taskToDelete) {
         console.log('deleteTask');
-        //_.remove(this.state.todos, todo => todo.task === taskToDelete);
-        //this.setState({ todos: this.state.todos });
-        
-        const index = _.findIndex(this.state.todos, todo => todo.task === taskToDelete);
-        const tempList = Immutable.fromJS(this.state.todos);
-        var tempList2 = tempList.delete(index);
-        this.setState({ todos: tempList2.toJS() });
-        
+
+        const myList = this.state.todos;
+        const searchList = this.state.todos.toJS(); 
+        // converting an Immutable to a plain JS object is expensive 
+        const index = _.findIndex(searchList, todo => todo.task === taskToDelete);
+        this.setState(({todos}) => ({
+          todos: myList.delete(index)
+        }));
+
     }
 }
