@@ -29,6 +29,8 @@ var todos = Immutable.fromJS(todosVanilla);
 export default class App extends React.Component {
     constructor(props) {
         super(props);
+        // we need to bind the methods here so we don't pass different references 
+        // to the components and trigger a rerender every time
         this.toggleTask = this.toggleTask.bind(this);
         this.saveTask = this.saveTask.bind(this);
         this.deleteTask = this.deleteTask.bind(this);
