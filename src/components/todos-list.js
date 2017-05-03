@@ -13,8 +13,9 @@ export default class TodosList extends React.Component {
 
     renderItems() {
         const props = _.omit(this.props, 'todos');
-
-        return this.props.todos.map((todo, index) => <TodosListItem key={index} task={todo.get("task")} priority={todo.get("priority")} isCompleted={todo.get("isCompleted")} toggleTask={props.toggleTask} saveTask={props.saveTask} deleteTask={props.deleteTask} />);
+        //use a static key that's unique to avoid rerender when doing an action that may change the key value of several components
+        //return this.props.todos.map((todo, index) => <TodosListItem key={index} task={todo.get("task")} priority={todo.get("priority")} isCompleted={todo.get("isCompleted")} toggleTask={props.toggleTask} saveTask={props.saveTask} deleteTask={props.deleteTask} />);
+        return this.props.todos.map((todo) => <TodosListItem key={todo.get("task")} task={todo.get("task")} priority={todo.get("priority")} isCompleted={todo.get("isCompleted")} toggleTask={props.toggleTask} saveTask={props.saveTask} deleteTask={props.deleteTask} />);
     }
 
     render() {
